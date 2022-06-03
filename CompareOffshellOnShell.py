@@ -28,8 +28,10 @@ if __name__ == '__main__':
                     help="Path to input file with ", metavar="FILE")
 
     (options, args) = parser.parse_args()
+    
+    outputPath  = "OnShell_Offshell_comparison"
 
-    numberOfBins = 10
+    numberOfBins = 5
     xBinsLow    = 0.0
     xBinsHigh    = 1.0
     xBins = array.array('d',np.linspace(xBinsLow, xBinsHigh, numberOfBins+1))
@@ -78,12 +80,14 @@ if __name__ == '__main__':
     onShellHisto.Draw("same")
     
     pad2.cd()
+    
+    #we want to calculate DeltaR/R * 1/DeltaM
 
     ratio = createRatio(offShellHisto, onShellHisto, "Top quark p_{T}", "#frac{Pythia 8}{Herwig 7}")
     
     ratio.Draw()
     # Create a new directory because it does not exist 
-    outputPath  = "TestComparison"
+    
     if not os.path.exists(outputPath):
         os.makedirs(outputPath)
         print("The new directory is created!")
