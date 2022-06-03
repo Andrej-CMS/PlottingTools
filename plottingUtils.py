@@ -283,7 +283,9 @@ def makeHistoFromLists(binCenters, binContent, binUncertainties, filename):
     histo = TH1D(filename, "", len(lowBinEdges)-1,  lowBinEdgesArr)
     
     for xBin in range(histo.GetNbinsX()+1):
+        #print("BINCONTENT : ", xBin+1, " : ", binContent[xBin])
         histo.SetBinContent(xBin+1,binContent[xBin])
+        #print("BINERROR : ", xBin+1, " : ", binUncertainties[xBin])
         histo.SetBinError(xBin+1,binUncertainties[xBin])
     
     return histo

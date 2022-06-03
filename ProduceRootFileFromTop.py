@@ -30,7 +30,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
     outputPath = "HistoListsFromTextFiles"
-    outputFile = options.outputFile
+    outputFileName = options.outputFile
     debug = False
     
     fileNameList = options.filename.split(",")
@@ -52,6 +52,7 @@ if __name__ == '__main__':
     #fill content into dictionary
     for fileName in fileNameList:
         with open(fileName) as file:
+
             del binCenters[:]
             del binContent[:]
             del binUncertainties[:]
@@ -81,6 +82,7 @@ if __name__ == '__main__':
                                             fileContentDictionary.get(key)[1],
                                             fileContentDictionary.get(key)[2], 
                                             fileName))
+        
     #checked manually that the numbers are exactly the same as in the input files
     if debug:
         for xBin in range(histoList[0].GetNbinsX()):
@@ -96,7 +98,9 @@ if __name__ == '__main__':
         os.makedirs(outputPath)
         print("The new directory is created!")
         
-    outputFile = TFile(outputPath+"/"+outputFile+".root","RECREATE");
+    outputFile = TFile(outputPath+"/"+outputFileName+".root","RECREATE");
     outputList.Write("histoList", TObject.kSingleKey);
     outputFile.Close()
+    
+    print("Finished processing ", outputFileName)
     
