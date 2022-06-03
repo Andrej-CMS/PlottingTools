@@ -274,3 +274,50 @@ def printUncertaintiesToLatex(ratio, nominal, histoTitle):
     print "Average above 1000  $= ", mean1000andhigher   , " \\pm ", math.sqrt(stdDev1000andhigher/numBins1000andhigher), "$"
     print "-------------------------------------------------"
 # END OF printUncertaintiesToLatex
+
+
+def makeHistoFromLists(binCenters, binContent, binUncertainties, filename):
+    
+    lowBinEdges = makeLowBinEdges(binCenters)
+    lowBinEdgesArr = np.array(lowBinEdges)
+    histo = TH1D(filename, "", len(lowBinEdges)-1,  lowBinEdgesArr)
+    
+    for xBin in range(histo.GetNbinsX()+1):
+        histo.SetBinContent(xBin+1,binContent[xBin])
+        histo.SetBinError(xBin+1,binUncertainties[xBin])
+    
+    return histo
+# END OF makeHistoFromLists
+
+# assumes equidistant bins
+def makeLowBinEdges(binCenters):
+    
+    lowBinEdges = []
+    for binNum in range(len(binCenters)):
+        binWidth = 0.
+        
+        if binNum == len(binCenters)-1:
+            binWidth    = abs(binCenters[binNum]-binCenters[binNum-1])
+        else:
+            binWidth    = abs(binCenters[binNum+1]-binCenters[binNum])
+        
+        lowBinEdge  = binCenters[binNum]-binWidth/2.
+        
+        lowBinEdges.append(round(lowBinEdge,4))
+    
+    return lowBinEdges
+
+# END OF  makeLowBinEdges
+
+def makeFileNameFromPath(key):
+   # ../run_OffShell/Rho_Observable/mt168/offshell/NLO/NNPDF3_ET_5/27_rho_nrm
+    splitKey    = key.split("/")
+    distribution= splitKey[-1]
+    scaleAndPDF = splitKey[-2]
+    
+    massString  = key[key.find("mt1"):key.find("mt1")+5]
+    fileName= distribution+"_"+scaleAndPDF+"_"+massString
+
+    return fileName
+    
+# END of makeFileNameFromPath
